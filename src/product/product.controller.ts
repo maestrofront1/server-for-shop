@@ -1,4 +1,13 @@
-import { Controller, Get, Post, Body, Param, Put, Delete } from '@nestjs/common';
+import {
+    Controller,
+    Get,
+    Post,
+    Body,
+    Param,
+    Put,
+    Delete,
+    ParseIntPipe
+} from '@nestjs/common';
 import type {CreateProductDto} from "./dto/create-product.dto";
 import { ProductService } from './product.service';
 
@@ -31,4 +40,15 @@ export class ProductController {
     remove(@Param('id') id: string) {
         return this.productService.remove(+id);
     }
+
+    @Get('/by-subcategory/:subcategoryId')
+    findBySubcategory(@Param('subcategoryId', ParseIntPipe) subcategoryId: number) {
+        return this.productService.findBySubcategory(subcategoryId);
+    }
+
+    @Get('/by-category/:categoryId')
+    findByCategory(@Param('categoryId', ParseIntPipe) categoryId: number) {
+        return this.productService.findByCategory(categoryId);
+    }
+
 }

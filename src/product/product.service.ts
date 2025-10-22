@@ -29,4 +29,31 @@ export class ProductService {
     async remove(id: number): Promise<Product> {
         return this.prisma.product.delete({ where: { id } });
     }
+
+    async findBySubcategory(subcategoryId: number) {
+        return this.prisma.product.findMany({
+            where: { subcategoryId },
+            include: {
+                subcategory: {
+                    include: { category: true },
+                },
+            },
+        });
+    }
+
+    async findByCategory(categoryId: number) {
+        return this.prisma.product.findMany({
+            where: {
+                subcategory: {
+                    categoryId,
+                },
+            },
+            include: {
+                subcategory: {
+                    include: { category: true },
+                },
+            },
+        });
+    }
+
 }
