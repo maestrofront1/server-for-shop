@@ -1,26 +1,36 @@
 import { Injectable } from '@nestjs/common';
+import { PrismaService } from '../prisma/prisma.service';
 import { CreateSubcategoryDto } from './dto/create-subcategory.dto';
-import { UpdateSubcategoryDto } from './dto/update-subcategory.dto';
 
 @Injectable()
 export class SubcategoryService {
-  create(createSubcategoryDto: CreateSubcategoryDto) {
-    return 'This action adds a new subcategory';
-  }
+    constructor(private prisma: PrismaService) {}
 
-  findAll() {
-    return `This action returns all subcategory`;
-  }
+    create(data: CreateSubcategoryDto) {
+        return this.prisma.subcategory.create({ data });
+    }
 
-  findOne(id: number) {
-    return `This action returns a #${id} subcategory`;
-  }
+    findAll() {
+        return this.prisma.subcategory.findMany({
+            include: { category: true, products: true },
+        });
+    }
 
-  update(id: number, updateSubcategoryDto: UpdateSubcategoryDto) {
-    return `This action updates a #${id} subcategory`;
-  }
+    findOne(id: number) {
+        return this.prisma.subcategory.findUnique({
+            where: { id },
+            include: { category: true, products: true },
+        });
+    }
 
-  remove(id: number) {
-    return `This action removes a #${id} subcategory`;
-  }
+    update(id: number, data: Partial<CreateSubcategoryDto>) {
+        return this.prisma.subcategory.update({
+            where: { id },
+            data,
+        });
+    }
+
+    remove(id: number) {
+        return this.prisma.subcategory.delete({ where: { id } });
+    }
 }
